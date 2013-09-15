@@ -9,6 +9,8 @@ Descargas
 Descárga el libro bajando el archivo PDF.
 O descárgate todo este repositorio con:  https://github.com/joancatala/ServidorDomesticoOpenBSD.git
 
+También podéis ver el manual en formato HTML en http://nuvolet.strangled.net/servidor-domestico/
+
 Contacta conmigo
 ========================
 
