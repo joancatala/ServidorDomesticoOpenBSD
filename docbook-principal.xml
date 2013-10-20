@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <book xmlns="http://docbook.org/ns/docbook"
       xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="es">
+
     <bookinfo>
-
-
         <legalnotice>
-            <para>Copyright Creative Commons 2012 Joan Català Piñón &lt;joan@riseup.net&gt;.</para>
+            <para>Copyright Creative Commons 2012-2013 Joan Català Piñón &lt;joan@riseup.net&gt;.</para>
             <para>Se permite la redistribución y uso del código (SGML DocBook) y los formularios compilados" (SGML, HTML, PDF) para cualquier finalidad. Se permite cualquier explotación de la obra, incluyendo una finalidad comercial, así como la creación de obras derivadas, la distribución de las cuales también está permitida sin ninguna restricción.</para>
 	<para><figure id="licencia">
 	<title>Licencia Reconocimiento (by) CC</title>
 	<graphic fileref="imagenes/cc.jpg"></graphic>
 	</figure> </para>
-
         </legalnotice>
-
-    <copyright><year>2012</year><holder>Joan Català Piñón</holder></copyright>
-
+    <copyright><year>2012-2013</year><holder>Joan Català Piñón</holder></copyright>
     </bookinfo>
 
 
@@ -23,7 +19,7 @@
   <title>Introducción</title>
     <para>Si te interesa montarte tu propio servidor en casa para servirte de repositorio de música o películas, o para tener un control de versiones en tus programas y proyectos web, o para ser un servidor FTP donde almacenar copias de seguridad de datos importantes guardándolos desde cualquier parte del planeta, o si deseas poder leer el correo desde cualquier sitio y de forma segura, o si quieres montar un servidor web para tener la web de la asociación de perros dálmata de tu barrio, quizás este manual sea un buen punto de partida porque en él explico cómo montar un servidor doméstico con el sistema operativo libre OpenBSD. </para>
 
-<para>En realidad, da igual si lo montas con OpenBSD o con cualquier otro sistema operativo, ya que los conceptos e ideas que vengo a presentar en el presente documento se pueden implementar y adaptar con otros sistemas.</para>
+<para>En realidad, no será mucho más complicado si lo montas con OpenBSD o con cualquier otro sistema operativo, ya que los conceptos e ideas que vengo a presentar en el presente documento se pueden implementar y adaptar con otros sistemas de tipo UNIX.</para>
 
   <section>
     <title>Objetivo de este manual</title>
@@ -72,7 +68,7 @@
   </section>
 
    <section>
-   <title>Inconvenientes de montar un servidor doméstico</title>
+   <title>Inconvenientes</title>
 
    <para>Pues sí, el hecho de montar un servidor doméstico en tu casa te generará posiblemente algunos inconvenientes, y muchos dolores de cabeza. Estás avisado. A continuación te dejo una lista de los inconvenientes que yo puedo ver si te decides por montarte un servidor propio en tu casa para darte algunos servicios 24x7:</para>
 
@@ -114,7 +110,7 @@
 </section>
 
     <section>
-    <title>Beneficios de montar un servidor doméstico</title>
+    <title>Beneficios</title>
 
    <para>Aquí también dejo los beneficios que obtengo al montar mi propio servidor.</para>
 
@@ -149,7 +145,7 @@
 
 <figure>
 <title>Web oficial de OpenBSD, http://openbsd.org</title>
-<graphic fileref="imagenes/web-openbsd."></graphic>
+<graphic fileref="imagenes/web-openbsd.jpg"></graphic>
 </figure> 
 
     <para>Una instalación de OpenBSD, al contrario de lo que puedas imaginar, es una tarea que acaba en 10 minutos. Lo que pasa es que posteriormente vas a tener que instalar Postfix - por ejemplo - y comenzar a configurarlo.</para>
@@ -161,12 +157,13 @@
     <section>
 	<title>Puesta en marcha</title>
      
-    <para>Pues nada, tras la instalación, reinicia el servidor y ya está. Ya tienes OpenBSD 5.1 corriendo en el servidor y preparado para ofrecer servicios desde internet. Felicidades, bébete una cerveza y disfruta del momento ;-).</para>
+    <para>Tras la instalación te dirá que ya tienes el sistema operativo instalado. Deberás reiniciar el servidor y entonces ya tienes OpenBSD totalmente operativo y ya puedes disfrutar de la experiencia OpenBSD 5.1 para ofrecer servicios desde internet. Felicidades, bébete una cerveza y disfruta del momento ;-).</para>
+
 	</section>
 
 	<section>
 	<title>Configuración de la red</title>
-	<para>Tras la instalación, si necesitamos cambiar la configuración de la red debemos saber que la configuración de las interfaces de red se encuentra en /etc/hostname.TU_TARJETA, donde TU_TARJETA es el nombre de la interfaz, en OpenBSD dependen del fabricante de la tarjeta de red, por lo tanto en cada ordenador es diferente.</para>
+	<para>Durante el proceso de instalación (no recuerdo ahora si era el tercer o cuarto paso) habrás configurado tu red, ya que el menú de instalación detecta tus interfaces de red y te pregunta si deseas configurar una ip dinámica o si deseas introducir manualmente una. Pero, si de todas formas tras tener instalado el sistema, necesitamos ambiar la configuración de la red debemos saber que la configuración de las interfaces de red se encuentra en /etc/hostname.TU_TARJETA, donde TU_TARJETA es el nombre de la interfaz, en OpenBSD dependen del fabricante de la tarjeta de red, por lo tanto en cada ordenador es diferente.</para>
 
 	<para>Para saber cómo se llaman nuestras tarjetas ejecutamos la orden ifconfig tal que así:</para>
 
@@ -206,7 +203,37 @@ vlan0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500
         status: active
         inet6 fe80::213:a9ff:fe4f:838f%vlan0 prefixlen 64 scopeid 0x5
     </programlisting>
+</section>
 
+
+    <section>
+	<title>Configurar una IP estática en nuestra máquina</title>
+
+<para>Como puedes ver, aquí nos salen varias interfaces: la interfaz de 'loopback' (lo0), la Ethernet (msk0) y un par de interfaces wifi.</para>
+
+<para>En mi caso, como tengo el servidor 'nuvolet' conectado con un cable RJ45 directamente al router a través de la conexión Ethernet msk0, voy a configurar la red en ese dispositivo con una IP fija.</para>
+
+<para>Para ello, creamos un fichero en /etc/ llamado hostname.msk0 que contendrá la dirección IP y la máscara de subred:</para>
+
+    <programlisting language="bash">inet 192.168.1.2 255.255.255.0</programlisting>
+
+</section>
+
+
+<section>
+	<title>Configurar una red dinámica en nuestra máquina</title>
+
+<para>Si al contrario que en el apartado anterior, queremos que nuestra máquina OpenBSD adquiera una dirección dinámica que le dé el router u otra máquina, configuraremos nuestro fichero hostname.msk0 con la siguiente línea:</para>
+
+    <programlisting language="bash">dhcp</programlisting>
+
+<para>Así, al arrancar OpenBSD le pedirá una ip aleatoria al servidor DHCP.</para>
+</section>
+
+
+
+<section>
+	<title>Configurar el nombre de tu máquina</title>
 
 	<para>El nombre de tu máquina lo puedes configurar simplemente añadiéndolo en el fichero <emphasis>/etc/myname</emphasis>. No es necesario decir que te asegures de configurar bien tu dominio o subdominio y que apunte a la IP de tu casa, ya sea fija o dinámica (en mi caso es fija, por eso no comento nada de los servicios de IP's dinámicas):</para>
 
@@ -220,7 +247,6 @@ vlan0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500
 
 </section>
 </chapter>
-
 
 
 <chapter xml:id="ajniciales">
@@ -255,8 +281,8 @@ Para ello, primero es fundamental explicar cómo se instalan, eliminan y actuali
 </section>
 
 	<section>
-	<title>Procedemos a instalar algunos paquetes iniciales</title>
-	<para>OpenBSD lleva la shell 'Ksh' por defecto, pero algunas personas que venimos del sistema GNU/Linux estamos más familiarizados con Bash y ya conocemos muchos trucos y atajos de teclado usando esta shell.</para>
+	<title>Procedemos a instalar algunos paquetes</title>
+	<para>OpenBSD lleva la shell <emphasis>Ksh</emphasis> por defecto, pero algunas personas que venimos del sistema GNU/Linux estamos más familiarizados con Bash y ya conocemos muchos trucos y atajos de teclado usando esta shell.</para>
 	<para>Entonces, vamos a instalar la shell Bash para comenzar a tener un entorno que se ajuste a nuestros gustos. Para ello ejecutaremos la siguiente orden:</para>
 	
 	<programlisting language="bash">
@@ -321,6 +347,184 @@ scripts, el irssi para conectar a canales IRC y el genial screen:</para>
 
 </section>
 </chapter>
+
+
+
+
+
+
+
+<chapter xml:id="centralizaciondatosNFS">
+
+<title> Centralización de datos en una red mediante NFS</title>
+<para>En este apartado vamos a aprender qué es NFS y cómo podemos tener todos los datos de una red (documentos, imágenes, videos, programas, etc) centralizados en un único equipo que compartirá la información con todos los ordenadores que forman la red. Al principio supone perder algo de tiempo analizando requerimientos y necesidades de tu red y de tus usuarios, configurar y realizar las pertinentes pruebas hasta que todo quede como quieres. Pero al final, tendrás menos dolores de cabeza ya que todos los datos estarán en un único directorio de un único ordenador, y las copias de seguridad serán más fáciles de gestionar.</para>
+
+<section>
+<title>¿Pero qué es eso de NFS?</title>
+<para> El <emphasis>«Sistema de Archivos de Red»</emphasis> (NFS, Network File System, en la lengua de Shakespeare) se usa para compartir un sistema de archivos en una red. El objetivo es poder trabajar con la misma información trabajes en el ordenador que trabajes, ya que sólo van a montar los directorios mediante NFS pero en realidad los datos están en mi servidor con OpenBSD (es lo mismo que lo que hoy en día llaman "en la nube").</para>
+
+<para>Imagina una oficiona con 2 trabajadores, <emphasis>Fulanito</emphasis> y <emphasis>Menganito</emphasis>. Ambos tendrán en el escritorio de su ordenador los informes de la empresa, la contabilidad en sus hojas de cálculo, manuales, etc. Y si ahora <emphasis>Menganito</emphasis> tiene que bajar a otra planta del eficio y accede a otro ordenador, seguirá teniendo los mismos directorios en su escritorio: los informes de la empresa, la contabilidad en sus hojas de cálculo, los manuales, etc. Esto se consigue a partir del NFS.</para>
+
+<figure>
+<title>Centralización de archivos en una LAN con NFS</title>
+<graphic fileref="imagenes/NFS-OpenBSD-GNU-Linux-Mac-Os-X.jpg"></graphic>
+</figure> 
+
+<para>Como puedes ver en la imagen anterior, en mi casa dispongo de:</para>
+
+<itemizedlist>
+<listitem>Un servidor (nuvolet) aparcado en una estantería entre mis libros</listitem>
+<listitem>Mi portátil Lenovo con Ubuntu Linux</listitem>
+<listitem>Un portátil antiguo Dell que no uso nunca con Ubuntu Linux</listitem>
+<listitem>Un iMac con OS X Leopard</listitem>
+</itemizedlist>
+
+<para>Desde cualquiera de estos ordenadores, puedo acceder a mis documentos importantes, a las fotos de mis viajes, a mis películas, a mi música, etc. Y no necesito tener la información duplicada ni nada parecido... el iMac usa MacOsX y si quiero escuchar música, lo normal es meterla también en el directorio del iTunes y tal, porque Apple lo quiere así. Pero a mi no me gusta esta manera, y tengo toda mi música en un único fichero centralizado para que, sea cualquiera el ordeandor, pueda añadir, eliminar o escuchar música.</para>
+
+</section>
+
+<section>
+<title>Ventajas de usar NFS</title>
+
+<para>Las ventajas de usar el servicio NFS para centralizar información en nuestra red son:</para>
+
+<itemizedlist>
+   <listitem>Es un protocolo libre y transparente que muchos sistemas Unix y la mayoría de distribuciones Linux incluyen por defecto.</listitem>
+
+   <listitem>Permite almacenar los archivos home de todos los usuarios de una red en un único servidor. Así evitamos problemas y duplicidades de archivos.</listitem>
+
+   <listitem>Al unificar todas las cuentas de usuarios o todos los directorios de trabajo, reducimos costos notablemente.</listitem>
+
+   <listitem>Facilita la disponibilidad de los datos, ya que facilita las copias de seguridad en el servidor al estar todo centralizado.</listitem>
+
+   <listitem>La versión 4 de NFS es especialmente segura en la gestión de recursos ya que soporta Kerberos, lista de control de acceso (ACLs) y permite trabajar bajo cortafuegos. Esto nos asegura que los datos almacenados en el servidor NFS son accedidos por quien nosotros realmente queremos.</listitem>
+
+   <listitem>Ahora también Windows Server (2003/2008/2012) también permite hacer tando de servidor NFS como de cliente. Esto permite que sistemas Windows puedan acceder también a datos almacenados en sistemas Unix y por supuesto, simplificar el esfuerzo de una posible migración de Windows Server a un servidor Unix y viceversa, asegurando la continuidad en la disponibilidad de recursos y aplicaciones</listitem>
+</itemizedlist>
+
+</section>
+
+<section>
+<title>Configuración del servidor</title>
+<para>Para configurar el NFS en mi servidor con OpenBSD y permitir puntos de montaje a las máquinas lenovo, dell e iMac debemos tener activados los siguientes servicios en el fichero /etc/rc.conf:</para>
+	
+	<programlisting language="bash">
+	portmap
+	nfsd -u -t -n 4
+	mountd
+	</programlisting>
+
+<para>A continuación pongo la configuración del fichero /etc/exports del servidor:</para>
+
+	<programlisting language="bash">
+	$ cat /etc/exports                                    
+	# $OpenBSD: exports,v 1.2 2002/05/31 08:15:44 pjanzen Exp $
+	#
+	# NFS exports Database
+	# See exports(5) for more information.  Be very careful:  misconfiguration
+	# of this file can result in your filesystems being readable by the world.
+
+	/home/joan/documents -alldirs -maproot=root 192.168.1.33
+	/var/www/htdocs -alldirs -maproot=root 192.168.1.33
+	</programlisting>
+
+<para>Como puedes ver, voy a compartir el fichero 'documents' del usuario <emphasis>joan</emphasis> y el directorio 'htdocs' de Apache. De tal manera, cualquier cliente podrá programar las páginas webs fácilmente, sin necesidad de conectarse por FTP o SSH, ya que dispondrán de los ficheros php, css, etc.. en sus ordenadores.</para>
+
+<para>Si hacemos cambios sobre el fichero /etc/exports y queremos ejecutarlos al momento tenemos dos opciones: o reiniciar el servidor o matar mountd con <emphasis>"kill -9 nº_de_proceso"</emphasis> y ejecutarlo de nuevo.</para>
+
+</section>
+
+
+<section>
+<title>Configuración de los clientes</title>
+<para>Para montar manualmente los directorios 'documents' i 'htdocs' del servidor en los clientes, podemos ejecutar estos dos comandos:</para>
+	<programlisting language="bash">
+	sudo mount -t nfs 192.168.1.2:/var/www/htdocs /home/joan/web
+	sudo mount -t nfs 192.168.1.2:/home/joan/documents /home/joan/documents
+	</programlisting>
+
+<para>Donde 192.168.1.2 es la ip del servidor y el último parámetro /home/joan/web, por ejemplo, es el destino en donde montaremos el directori 'htdocs' del servidor.</para>
+
+<para>Si no queremos ejecutar estos comandos cada vez, sino que deseamos que se monten automáticamente tras el arranque de nuestros equipos, añadiremos la configuración en el /etc/fstab del cliente (Ubuntu Linux, en mi caso) para que estos directorios se monten automáticamente en el arranque del sistema (¡siempre que el servidor nuvolet esté arrancado!). Así que añadiremos:</para>
+
+	<programlisting language="bash">
+	#Muntem via NFS el directori /var/www/htdocs del servidor nuvolet
+	192.168.1.2:/var/www/htdocs /home/joan/web nfs rw 0 0
+	
+	#Muntem via NFS el directori /home/joan/documents del servidor nuvolet
+	192.168.1.2:/home/joan/documents /home/joan/documents nfs rw 0 0
+	</programlisting>
+
+<para>Ahora ya podemos reiniciar el cliente y veremos cómo se montan automáticamente nuestros recursos vía NFS.</para>
+
+<figure>
+<title>Directorio montado con NFS en el GNU/Linux</title>
+<graphic fileref="imagenes/nfs-desde-GNU-linux.jpg"></graphic>
+</figure> 
+
+<figure>
+<title>Directorio montado con NFS en el MacOS X</title>
+<graphic fileref="imagenes/nfs-desde-mac.jpg"></graphic>
+</figure> 
+
+<para>Finalmente, como puedes ver, ya puedo trabajar con el portàtil y parece como que los ficheros están en local, pero en realidad estoy trabajando en mi servidor doméstico nuvolet y hacer las cosas que hago siempre pero con la seguridad de que lo tengo todo centralizado en un servidor que funciona 24x7 y que tiene programadas copias de seguridad de forma regular.</para>
+</section>
+
+<section>
+<title>¿Problemas con NFS?</title>
+
+<para>Si experimentas algún problema puedes primero cerciorarte, desde tu cliente, que el servidor NFS está funcionando y compartiendo algún (algunos) recurso (s) compartido (s) con el comando showmount:</para>
+
+	<programlisting language="bash">
+joan@lenovo:~$ showmount -e 192.168.1.2
+Export list for 192.168.1.2:
+/home/joan/documents (everyone)
+/var/www/htdocs (everyone)
+joan@lenovo:~$
+	</programlisting>
+
+<para>Puedes comprobar que los servicios mount, portmap y NFS estén corriendo en un servidor con el comando rpcinfo como te muestro a continuación:</para>
+
+	<programlisting language="bash">
+joan@lenovo:~$ rpcinfo -p nuvolet.strangled.net
+   program vers proto   port  service
+    100000    2   tcp    111  portmapper
+    100000    2   udp    111  portmapper
+    100003    2   udp   2049  nfs
+    100003    3   udp   2049  nfs
+    100005    1   udp    776  mountd
+    100005    3   udp    776  mountd
+    100005    1   tcp    763  mountd
+    100005    3   tcp    763  mountd
+joan@lenovo:~$
+	</programlisting>
+
+<para>También podríamos hacer, antes que nada, un escaneo de puertos para saber si el servidor tiene los puertos que nos interesan abiertos:</para>
+
+	<programlisting language="bash">nmap -O ip-del-servidor</programlisting>
+
+<para>Montar un servidor de datos mediante NFS para que nuestros ordenadores monten los directorios o particiones es bastante sencillo de realizar, y debemos tener en cuenta siempre la seguridad valorando qué directorios vamos a compartir y, lo más importante, a quién. Por este motivo, yo aconsejo acotar los directorios especificando redes concretas o IP's concretas de máquinas, ya que de lo contrario esos servidores estarán abiertos a todo el mundo.</para>
+
+<para>Podemos comprobar los puntos demontaje NFS que tenemos en nuestro ordenador con el comando df:</para>
+
+<programlisting language="bash">
+joan@lenovo:~/NFSdocuments$ df -h
+S. fitxers                         Mida En ús Lliure  %Ús Muntat a
+/dev/sda1                           70G   38G    29G  57% /
+udev                               2,0G  4,0K   2,0G   1% /dev
+tmpfs                              791M  848K   790M   1% /run
+none                               5,0M     0   5,0M   0% /run/lock
+none                               2,0G  588K   2,0G   1% /run/shm
+192.168.1.2:/home/joan/documents   21G  4,6G    15G  24% /home/joan/NFSdocuments
+192.168.1.2:/var/www/htdocs   21G  4,6G    15G  24% /home/joan/webs
+</programlisting>
+
+<para>Si quieres más información técnica y directa sobre NFS, lee el manual <ulink>http://www.openbsd.org/faq/es/faq6.html#NFS</ulink>.</para>
+</section>
+
+
+</chapter>
+
 
 <chapter xml:id="instalacionyconfiguracionservidorweb">
   <title>Instalación y configuración del servidor web</title>
@@ -1037,5 +1241,79 @@ $
 
 <para>Este sistema también servirá para hacer un mantenimiento bastante grande a tu máquina, formateo o reinstalación de todo el sistema.</para>
 </section>
+
+<section>
+<title>Un script de ejemplo para nuestro sistema de respaldo</title>
+<para>Aquí dejo un ejemplo para que tengas todos los directorios y ficheros importantes de tu servidor OpenBSD bajo control. Recuerda que puedes modificarlo y adaptarlo a tus necesidades añadiendo nuevos directorios o cambiando parámetros:</para>
+
+<screen>
+###################################################################
+# Backup de tots els sites del servidor OpenBSD                   #
+#                                                                 #
+# 1.Primer copie alguns fitxers i bases de dades                  #
+# 2.Fem el tar.gz de tot el /var/www/htdocs                       #
+# 3.Enviem també el backup a un servidor via FTP                  #
+# 4.Enviem una notificació per e-mail.                            #
+#                                                                 #
+# Versió 0.2 - 26/08/2013                                         #
+###################################################################
+
+# Entrem a /var/www/backups i creem un directori per a cada dia
+#
+cd /var/www/backups
+NOW=$(date +"%Y%m%d")
+mkdir $NOW
+cd $NOW
+
+###################################################################
+# [Copia 1] Copiem 4 bases de dades
+###################################################################
+/usr/local/bin/mysqldump -u USUARI -pPASS1 | gzip > ./$NOW.BBDD1.sql.gz
+/usr/local/bin/mysqldump -u USUARI -pPASS2 | gzip > ./$NOW.BBDD2.sql.gz
+/usr/local/bin/mysqldump -u USUARI -pPASS3 | gzip > ./$NOW.BBDD3.sql.gz
+/usr/local/bin/mysqldump -u USUARI -pPASS4 | gzip > ./$NOW.BBDD4.sql.gz
+
+###################################################################
+# [Copia 2] Copies de fitxers importants
+###################################################################
+cp /var/www .
+cp /opt/programes .
+cp /usr/scripts .
+
+###################################################################
+# [Copia 3] Copiem els home dels usuaris
+###################################################################
+tar cvfz ./home-root.tar.gz  /root
+tar cvfz ./home-usuari1.tar.gz  /home/USUARI1
+tar cvfz ./home-usuari2.tar.gz  /home/USUARI2
+tar cvfz ./home-usuari3.tar.gz  /home/USUARI3
+tar cvfz ./home-usuari4.tar.gz  /home/USUARI4
+
+###################################################################
+# [Copia 4] Copiem el directori de les webs que tenim al htdocs
+###################################################################
+tar cvfz ./var-www-htdocs.tar.gz /var/www/htdocs
+
+###################################################################
+# [Copia 5] Creem un tar.gz amb tots els fitxers
+###################################################################
+tar cvfz /var/www/backups/ultim-backup.tar.gz *
+
+	</screen>
+
+<para>Yo lo tengo configurado para que, además, me envíe los datos a otro servidor externo vía FTP, así tendré las copias de seguridad en dos equipos distintos y en caso de que se rompa el disco duro de <emphasis>nuvolet</emphasis> encontraré la información en el otro servidor externo.
+
+Y también, al final de todo, me envía un correo electrónico notificándome que la copia de seguridad se ha realizado correctamente, algo muy útil para que me quede tranquilo cada mañana al recibir ese correo ;-). Pues bién, tienes la última versión del script en:</para>
+
+<para>
+<emphasis>http://jcatala.net/categoria-unix/script-que-fa-copies-de-seguretat-en-local-i-un-servidor-remot</emphasis>
+</para>
+
+<para>Y recuerda compartir tus modificaciones, adaptaciones y mejoras del script, para que todos nos podamos beneficiar y aprender.</para>
+
+</section>
+
+
+
 </chapter>
 </book>
