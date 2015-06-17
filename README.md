@@ -10,7 +10,7 @@ Descárga simplemente el libro bajando el archivo PDF.
 
 O descárgate todo este repositorio con: https://github.com/joancatala/ServidorDomesticoOpenBSD.git
 
-También podéis ver el manual en formato HTML en mi servidor doméstico http://nuvolet.strangled.net/servidor-domestico/
+También podéis ver el manual en formato HTML en mi web personal http://jcatala.net/categoria-unix/c%C3%B3mo-montar-un-servidor-dom%C3%A9stico-con-openbsd-actualizado
 
 Contacta conmigo
 ========================
@@ -18,3 +18,4 @@ Contacta conmigo
 Puedes contactar conmigo desde GitHub, desde Twitter (@joancatala) o por mail (joan-X-riseup.net)
 
 Mi web personal, donde hablo un poco de nada y un poco de todo, es http://jcatala.net
+Sé feliz. Comparte código.
