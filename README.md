@@ -6,7 +6,7 @@ Este libro está realizado con Docbook y dirigido a aquellas personas que siempr
 Descargas
 ========================
 
-Descárga simplemente el libro bajando el archivo PDF.
+Descarga simplemente el libro bajando el archivo PDF.
 
 O descárgate todo este repositorio con: https://github.com/joancatala/ServidorDomesticoOpenBSD.git
 
@@ -17,5 +17,5 @@ Contacta conmigo
 
 Puedes contactar conmigo desde GitHub, desde Twitter (@joancatala) o por mail (joan-X-riseup.net)
 
-Mi web personal, donde hablo un poco de nada y un poco de todo, es http://jcatala.net
-Sé feliz. Comparte código.
+En mi blog personal hablo, algunas veces, de OpenBSD. Visita http://joancatala.net
+Sé feliz. Comparte código. Usa UNIX.
