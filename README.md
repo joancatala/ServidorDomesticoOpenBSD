@@ -10,7 +10,7 @@ Descarga simplemente el libro bajando el archivo PDF.
 
 O descárgate todo este repositorio con: https://github.com/joancatala/ServidorDomesticoOpenBSD.git
 
-También podéis ver el manual en formato HTML en mi web personal http://jcatala.net/categoria-unix/c%C3%B3mo-montar-un-servidor-dom%C3%A9stico-con-openbsd-actualizado
+También podéis ver el manual en formato HTML en mi web personal http://joancatala.net/categoria-unix/c%C3%B3mo-montar-un-servidor-dom%C3%A9stico-con-openbsd-actualizado
 
 Contacta conmigo
 ========================
